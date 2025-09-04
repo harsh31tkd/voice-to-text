@@ -12,14 +12,8 @@ It uses the **Web Speech API** to convert your speech into text in real time.
 - 🌗 **Dark/Light Mode** – Switch between modern UI themes.  
 - 🎨 **Beautiful UI** – Gradient background, animations, and responsive design.  
 
-## 🖼️ Preview  
-![Preview Screenshot](https://cdn-icons-png.flaticon.com/512/727/727245.png)  
-*(Replace with your actual project screenshot once deployed)*  
-
-## 🚀 Demo  
-You can try it locally or deploy it on **GitHub Pages / Netlify / Vercel**.  
-
-👉 Example: [Live Demo Link](https://harsh31tkd.github.io/voice-to-text/)  
+## 🖼️ Preview   
+<img width="1920" height="1080" alt="Screenshot (24)" src="https://github.com/user-attachments/assets/d8c0ae43-ace1-431d-b86b-db141145e0bd" />
 
 ## 📂 Installation / Usage  
 
@@ -28,9 +22,9 @@ You can try it locally or deploy it on **GitHub Pages / Netlify / Vercel**.
    git clone https://github.com/harsh31tkd/voice-to-text.git
     ```
 2. Open the folder
-```
-cd voice-to-text
-```
+   ```
+   cd voice-to-text
+   ```
 
 3. Run the project
 
