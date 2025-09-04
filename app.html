@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Voice to Text Converter</title>
+
+  <!-- 🎤 Favicon -->
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/727/727245.png" type="image/png">
+
+  <style>
+    /* General Page Styling */
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      padding: 15px;
+      box-sizing: border-box;
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+
+    body.light {
+      background: linear-gradient(135deg, #f0f0f0, #dcdcdc);
+      color: #333;
+    }
+
+    /* Card Container */
+    .container {
+      background: #1e1e2f;
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      width: 380px;
+      max-width: 100%;
+      box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 1s ease-in-out;
+      transition: background 0.5s ease;
+    }
+
+    body.light .container {
+      background: #fff;
+      color: #333;
+    }
+
+    .container h1 {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    /* Language Dropdown */
+    select {
+      padding: 10px 15px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      margin-bottom: 20px;
+      background: #2a2a3d;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    body.light select {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    select:focus {
+      outline: none;
+    }
+
+    /* Buttons */
+    button {
+      border: none;
+      padding: 12px 25px;
+      border-radius: 50px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 8px 0;
+    }
+
+    #btn {
+      background: #ff4b5c;
+      color: #fff;
+      width: 100%;
+      max-width: 250px;
+    }
+
+    #btn:hover {
+      background: #ff6b7c;
+      transform: scale(1.05);
+      box-shadow: 0px 8px 20px rgba(255, 75, 92, 0.4);
+    }
+
+    /* Pulse animation when recording */
+    #btn.recording {
+      animation: pulse 1.5s infinite;
+      background: #ff2e4d;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 75, 92, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(255, 75, 92, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 75, 92, 0); }
+    }
+
+    /* Output Box */
+    .output-box {
+      margin-top: 25px;
+      background: #2a2a3d;
+      padding: 15px;
+      border-radius: 12px;
+      min-height: 60px;
+      font-size: 16px;
+      line-height: 1.5;
+      word-wrap: break-word;
+      position: relative;
+      transition: background 0.3s ease;
+    }
+
+    body.light .output-box {
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    #output {
+      margin: 0;
+    }
+    
+
+    /* Small Buttons inside output */
+    #copyBtn, #downloadBtn {
+      
+      top: 10px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #fff;
+      cursor: pointer;
+      display: none;
+    }
+
+    #copyBtn {
+      right: 80px;
+      background: #4cafef;
+    }
+
+    #copyBtn:hover {
+      background: #6fc8ff;
+    }
+
+    #downloadBtn {
+      right: 10px;
+      background: #28a745;
+    }
+
+    #downloadBtn:hover {
+      background: #45c165;
+    }
+
+    /* Theme toggle */
+    #themeToggle {
+      background: #ffa500;
+      color: #fff;
+      margin-top: 15px;
+    }
+
+    #themeToggle:hover {
+      background: #ffb733;
+    }
+
+    /* Fade-in effect */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎤 Voice to Text Converter</h1>
+
+    <!-- Language Dropdown -->
+    <label for="language" style="display:block; margin-bottom:8px; font-size:15px;">Choose Language:</label>
+    <select id="language">
+      <option value="en-US">English</option>
+      <option value="hi-IN">Hindi</option>
+      <option value="pa-IN">Punjabi</option>
+    </select>
+
+    <button id="btn">Speak Now</button>
+    
+    <div class="output-box">
+      <p id="output">Your speech will appear here...</p>
+      <div class="output-buttons">
+          <button id="copyBtn">Copy</button>
+          <button id="downloadBtn">Download</button>
+        </div>
+    </div>
+
+    <button id="themeToggle">🌙 Toggle Dark/Light Mode</button>
+  </div>
+
+  <script>
+    const btn = document.getElementById("btn");
+    const output = document.getElementById("output");
+    const copyBtn = document.getElementById("copyBtn");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const languageSelect = document.getElementById("language");
+    const themeToggle = document.getElementById("themeToggle");
+
+    btn.addEventListener("click", () => {
+      const recognition = new webkitSpeechRecognition();
+      recognition.lang = languageSelect.value;
+      recognition.interimResults = true; // live transcription
+      recognition.start();
+      
+      btn.textContent = "Listening...";
+      btn.classList.add("recording");
+
+      recognition.onresult = (event) => {
+        let transcript = "";
+        for (let i = 0; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript + " ";
+        }
+        output.textContent = transcript.trim();
+        copyBtn.style.display = "inline-block";
+        downloadBtn.style.display = "inline-block";
+      };
+
+      recognition.onend = () => {
+        btn.textContent = "Speak Now";
+        btn.classList.remove("recording");
+      };
+    });
+
+    copyBtn.addEventListener("click", () => {
+      const text = output.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        copyBtn.textContent = "Copied!";
+        setTimeout(() => copyBtn.textContent = "Copy", 1500);
+      });
+    });
+
+    downloadBtn.addEventListener("click", () => {
+      const text = output.textContent;
+      const blob = new Blob([text], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "speech.txt";
+      link.click();
+    });
+
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("light");
+      themeToggle.textContent = document.body.classList.contains("light")
+        ? "🌙 Dark Mode"
+        : "☀️ Light Mode";
+    });
+  </script>
+</body>
+</html>
