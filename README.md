@@ -48,6 +48,10 @@ JavaScript (Web Speech API)
 
 🎧 Add voice-to-speech feedback (like a chatbot).
 
+# 🌐 Live Demo
+
+## 👉     https://harsh31tkd.github.io/voice-to-text/
+
 ## 🤝 Contributing
 
 Contributions are welcome! Fork this repo and submit a pull request.
